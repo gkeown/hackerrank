@@ -37,13 +37,13 @@ listlen(Node *head, int print) {
     Node *current = head;
     int len = 0;
     while (current != NULL) {
-	if (print) {
-        	if (current->next != NULL) {
-            		printf("%d -> ", current->data);
-        	} else {
-            		printf("%d.\n", current->data);   
-        	}
-	}
+        if (print) {
+            if (current->next != NULL) {
+                printf("%d -> ", current->data);
+            } else {
+                printf("%d.\n", current->data);
+            }
+        }
         current = current->next;
         len++;
     }
@@ -148,25 +148,62 @@ reverselist(Node **head)
 Node *
 mergelist(Node *list1, Node *list2)
 {
-	Node *mergedhead = NULL;
- 	int list1_size = listlen(list1, 0);
-	int list2_size = listlen(list2, 0);
+    Node *mergedhead = NULL;
+    int list1_size = listlen(list1, 0);
+    int list2_size = listlen(list2, 0);
 
-	int size = list1_size + list2_size;
-	Node *current = NULL, *prev = NULL; 
-	
-	// populate the dummy list
-	for (int i = 0; i < size; i++) {
-		for (int j = 0; j < list1_size; j++) {
-			Node *new_node = (Node *) malloc(sizeof(Node));
-			if (prev == NULL) {
-				mergedhead = new_node;
-			} else {
-				prev->next = new_node;
-		 	}	
-		}
-		for (int k = 0; k < list2_size	
-	}
+    int size = list1_size + list2_size;
+    Node *prev = NULL;
+    Node *iter = NULL, *iter2 = NULL;
+
+    // populate a dummy list - first with list1
+    iter = list1;
+    while (iter != NULL) {
+        Node *new_node = (Node *) malloc(sizeof(Node));
+        new_node->data = iter->data;
+        if (prev == NULL) {
+            mergedhead = new_node;
+        } else {
+            prev->next = new_node;
+        } 
+        prev = new_node;
+        iter = iter->next;
+    }
+
+    // then add the elements in list2 to appropriate positions
+    iter = list2;
+    prev = NULL;
+    while (iter != NULL) {
+        Node *new_node = (Node *) malloc(sizeof(Node));
+        new_node->data = iter->data;
+
+        // compare the new element with those already in the merged list
+        iter2 = mergedhead;
+        int pos = 0;
+        prev = NULL;
+
+        while (iter2 != NULL) {
+            if (new_node->data > iter2->data) { 
+                prev = iter2;
+                iter2 = iter2->next;
+            } else {
+                break;
+            }
+            pos++;
+        }
+
+        if (pos == 0) {
+            // update the head of the list
+            mergedhead = new_node;
+        } else {
+            prev->next = new_node;
+        }
+        new_node->next = iter2;
+
+        iter = iter->next;
+    }
+
+    return (mergedhead);
 }
 
 int main() {
@@ -180,9 +217,9 @@ int main() {
 	push(&list1, 20);
 	push(&list1, 10);
 
-	push(&list2, 65);
+	push(&list2, 5);
 	push(&list2, 55);
-	push(&list2, 45);
+	push(&list2, 7);
 	push(&list2, 35);
 	push(&list2, 15);
 
@@ -190,4 +227,8 @@ int main() {
 	listlen(list2, 1);
 
 	merged = mergelist(list1, list2);
+    listlen(merged, 1);
+
+    reverselist(&merged);
+    listlen(merged, 1);
 }
