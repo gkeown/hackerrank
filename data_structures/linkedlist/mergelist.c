@@ -239,7 +239,8 @@ splitlist(Node *source, Node **front, Node **back)
     slow->next = NULL;
 }
 
-Node* mergelist(Node *front, Node* back)
+Node *
+mergelist(Node *front, Node* back)
 {
 	Node* result = NULL;
 
