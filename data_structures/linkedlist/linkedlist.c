@@ -143,6 +143,76 @@ reverselist(Node **head)
 	*head = prev;
 }
 
+void
+insert_elem(Node **headRef, int data, int pos)
+{
+    Node *current = *headRef;
+    Node *prev = NULL, *new_node = NULL;
+    int i = 0;
+
+    new_node = malloc(sizeof(*new_node));
+    new_node->data = data;
+    new_node->next = NULL;
+
+    /* this is the first element in the list to be added */
+    if (current == NULL) {
+        *headRef = new_node;
+        return;
+    }
+
+    /* user inserting element at head */
+    if (pos == 0) {
+        new_node->next = current;
+        *headRef = new_node;
+        return;
+    }
+
+    /* otherwise insert element at position provided */
+    while (current != NULL && i != pos) {
+        prev = current;
+        current = current->next;
+        i++;
+    }
+
+    prev->next = new_node;
+    new_node->next = current;
+}
+
+void
+remove_elem(Node **headRef, int pos)
+{
+    Node *current = *headRef;
+    Node *prev = NULL;
+    int i = 0;
+
+    /* nothing to be removed */
+    if (current == NULL) {
+        return;
+    }
+
+    /* user requesting that head element is removed */
+    if (pos == 0) {
+        *headRef = current->next;
+        free(current);
+        return;
+    }
+
+    /* cycle through the list to removed the correct element */
+    while (current != NULL && i != pos) {
+        prev = current;
+        current = current->next;
+        i++;
+    }
+
+    if (i != pos) {
+        printf("element %d does not exist, list len %d\n", pos, i);
+        return;
+    }
+
+    prev->next = current->next;
+    free(current);
+}
+
 int main() {
 	Node *list1 = NULL;
 	Node *list2 = NULL;
@@ -153,21 +223,22 @@ int main() {
 	push(&list1, 50);
 	push(&list1, 25);
 
-	push(&list2, 15);
-	push(&list2, 25);
-	push(&list2, 35);
-	push(&list2, 55);
-	push(&list2, 95);
-	
-    // printlist(head);
-    // swap_list_pos(&head, 0, 1);
-	// swap_list_pos(&head, 3, 0);
-    // printlist(head);
-	// pop(&head);
-	// pop(&head);
-	// reverselist(&head);
-	
 	printlist(list1);
+
+	insert_elem(&list2, 15, 0);
+	insert_elem(&list2, 25, 1);
+	insert_elem(&list2, 35, 2);
+	insert_elem(&list2, 35, 99);
+	insert_elem(&list2, 55, 1);
+	insert_elem(&list2, 95, 0);
+
+	printlist(list2);
+
+    remove_elem(&list2, 0);
+    remove_elem(&list2, 1);
+    remove_elem(&list2, 3);
+    remove_elem(&list2, 6);
+
 	printlist(list2);
 	
 	return 0;
