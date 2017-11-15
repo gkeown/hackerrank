@@ -146,7 +146,7 @@ reverselist(Node **head)
 }
 
 Node *
-mergelist(Node *list1, Node *list2)
+mergelist3(Node *list1, Node *list2)
 {
     Node *mergedhead = NULL;
     int list1_size = listlen(list1, 0);
@@ -206,10 +206,87 @@ mergelist(Node *list1, Node *list2)
     return (mergedhead);
 }
 
+void
+splitlist(Node *source, Node **front, Node **back)
+{
+    Node *slow = NULL;
+    Node *fast = NULL;
+
+    if (source == NULL || source->next == NULL) {
+        *front = source;
+        *back = NULL;
+        return;
+    }
+
+    /* used to iterate through the list */
+    slow = source;
+    fast = source->next;
+
+    // find the middle element
+    while (fast != NULL) {
+        fast = fast->next;
+
+        /* fast skips an element until end of list is reached */
+        if (fast != NULL) {
+            slow = slow->next;
+            fast = fast->next;
+        }
+    }
+
+    /* slow->next is the middle element */
+    *front = source;
+    *back = slow->next;
+    slow->next = NULL;
+}
+
+Node* mergelist(Node *front, Node* back)
+{
+	Node* result = NULL;
+
+    // if one of the lists is empty, return the other list
+	if (front == NULL) {
+		return (back);
+	} else if (back == NULL) {
+		return (front);
+	}
+
+    /* determine next element and then move on recursively */
+	if (front->data <= back->data) {
+		result = front;
+		result->next = mergelist(front->next, back);
+	} else {
+		result = back;
+		result->next = mergelist(front, back->next);
+	}
+
+	return (result);
+}
+
+void
+mergeSort(Node **headRef)
+{
+    Node *head = *headRef;
+    Node *front = NULL;
+    Node *back = NULL;
+
+    // already sorted if empty or only 1 in size
+    if (head == NULL || head->next == NULL) {
+        return;
+    }
+
+    // divide and conquer
+    splitlist(head, &front, &back);
+
+    // recursively sort the split lists
+    mergeSort(&front);
+    mergeSort(&back);
+
+    *headRef = mergelist(front, back);
+}
+
 int main() {
 	Node *list1 = NULL;
 	Node *list2 = NULL;
-	Node *merged = NULL;
 	
 	push(&list1, 50);
 	push(&list1, 40);
@@ -217,18 +294,14 @@ int main() {
 	push(&list1, 20);
 	push(&list1, 10);
 
-	push(&list2, 5);
-	push(&list2, 55);
-	push(&list2, 7);
-	push(&list2, 35);
-	push(&list2, 15);
+	push(&list1, 65);
+	push(&list1, 55);
+	push(&list1, 45);
+	push(&list1, 35);
+	push(&list1, 15);
 
 	listlen(list1, 1);
-	listlen(list2, 1);
 
-	merged = mergelist(list1, list2);
-    listlen(merged, 1);
-
-    reverselist(&merged);
-    listlen(merged, 1);
+    mergeSort(&list1);
+    listlen(list1, 1);
 }
