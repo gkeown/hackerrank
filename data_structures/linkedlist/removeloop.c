@@ -53,6 +53,48 @@ listlen(Node *head, int print) {
 }
 
 void
+remove_loop_correct(Node *node_in_loop, Node **headRef)
+{
+    Node *ptr1 = node_in_loop;
+    Node *ptr2 = *headRef;
+
+    if (*headRef == NULL || node_in_loop == NULL) {
+        return;
+    }
+
+    /* find out the number of entries in the loop */
+    int num_nodes = 1; // including current node
+    while (ptr1->next != node_in_loop) {
+        num_nodes++;
+        ptr1 = ptr1->next;
+    }
+
+    // if we iterate through the list num_nodes elements from the head pointer, eventually
+    // ptr1 and ptr2 will both be the same element. This is the start of the loop.
+    ptr1 = *headRef;
+    for (int i = 0; i < num_nodes; i++) {
+        ptr1 = ptr1->next;
+    }
+
+    /* loop through the lists at the same speed */
+    while (ptr2 != NULL) {
+        if (ptr1 == ptr2) {
+            break;
+        }
+        ptr1 = ptr1->next;
+        ptr2 = ptr2->next;
+    }
+
+    /* find the end of the list */
+    while (ptr1->next != ptr2) {
+        ptr1 = ptr1->next;
+    }
+
+    /* remove the loop */
+    ptr1->next = NULL;
+}
+
+void
 remove_loop(Node *node_in_loop, Node **headRef)
 {
     Node *current = *headRef;
@@ -127,7 +169,8 @@ detect_and_remove_loop(Node **headRef)
     while (slow && fast && fast->next) {
 
         if (slow->data == fast->data) {
-            remove_loop(slow, headRef);
+            // remove_loop(slow, headRef);
+            remove_loop_correct(slow, headRef);
             return (true);
         }
 
