@@ -213,15 +213,16 @@ remove_elem(Node **headRef, int pos)
     free(current);
 }
 
-void
-sum_lists(Node *list1, Node *list2, Node **resHeadRef) {
-    Node *ptr1 = list1, *ptr2 = list2, *prev = NULL;
+Node *
+sum_lists(Node *list1, Node *list2) {
+    Node *ptr1 = list1, *ptr2 = list2;
+    Node *prev = NULL;
+    Node *resHead = NULL;
     int carry = 0, res = 0;
-    int set_head = 0;
 
     if (list1 == NULL || list2 == NULL) {
         printf("sum_lists: empty list, return\n");
-        return;
+        return NULL;
     }
 
     /* iterate through lists at same pace */
@@ -229,34 +230,22 @@ sum_lists(Node *list1, Node *list2, Node **resHeadRef) {
 
         /* create a new node to store the result */
         Node *res_node = (Node *) malloc(sizeof(Node));
-        if (!set_head) {
+        if (resHead == NULL) {
             /* set the head of the resultant list */
-            *resHeadRef = res_node; 
+            resHead = res_node; 
             prev = res_node;
-            set_head = 1;
         } else {
             prev->next = res_node;
             prev = res_node;
         }
 
         /* need to consider the carry bit from previous added digits */
-        if (ptr1 && ptr2) {
-            res = ptr1->data + ptr2->data + carry;
-        } else if (ptr1) {
-            res = ptr1->data + carry;
-        } else if (ptr2) {
-            res = ptr2->data + carry;
-        } else {
-            res = carry;
-        }
+        res = ((ptr1) ? ptr1->data : 0) + ((ptr2) ? ptr2->data : 0) + carry;
 
         /* reset carry bit for next calculation */
-        carry = 0;
+        carry = (res >= 10) ? 1 : 0;
 
-        /* set carry bit if applicable */
-        if (res >= 10) {
-            carry = 1;
-        }
+        /* store result in new list element */
         res_node->data = res % 10;
 
         /* move to next element */
@@ -268,6 +257,7 @@ sum_lists(Node *list1, Node *list2, Node **resHeadRef) {
             ptr2 = ptr2->next;
         }
     }
+    return (resHead);
 }
 
 int main() {
@@ -285,9 +275,10 @@ int main() {
 	insert_elem(&list2, 4, 1);
 	printlist(list2);
 
-    Node *result = NULL;
-    sum_lists(list1, list2, &result);
-    printlist(result);
+    Node *result = sum_lists(list1, list2);
+    if (result) {
+        printlist(result);
+    }
 
 	return 0;
 }
