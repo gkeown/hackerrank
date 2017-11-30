@@ -34,7 +34,7 @@ push(StackNode **root, int data)
     new_node->next = *root; // this could be NULL
     *root = new_node;
 
-    printf("pushed %d to stack\n", new_node->data);
+//    printf("pushed %d to stack\n", new_node->data);
 }
 
 int
@@ -68,6 +68,24 @@ peek(StackNode *root)
     return (root->data);
 }
 
+void
+reverse(char *string)
+{
+    StackNode *stack = NULL;
+    int i = 0;
+
+    for (i = 0; string[i]; i++) {
+        push(&stack, string[i]); 
+    }
+
+    i = -1;
+    while (!isEmpty(stack)) {
+        string[++i] = pop(&stack);
+    }
+
+    printf("result = %s\n", string);
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -83,6 +101,11 @@ main(int argc, char *argv[])
     printf("%d\n", pop(&stack));
     printf("%d\n", pop(&stack));
     pop(&stack);
+
+    char str[] = "test string";
+    printf("Reversing %s\n", str);
+    reverse(str);
+
 
     return (0);
 }
