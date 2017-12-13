@@ -125,7 +125,7 @@ print_levels_queue(TNode *node)
     while (node) {
         
         /* print current node's value first */
-        printf("%d \n", node->data);
+        printf("%d ", node->data);
 
         /* enqueue its children */
         enQueue(queue, &rear, node->left);
@@ -136,8 +136,9 @@ print_levels_queue(TNode *node)
     }
     return;
 }
-int
-main(int argc, char *argv[])
+
+void
+test_binary_tree(void)
 {
     TNode *root = new_node(1);;
     root->left = new_node(2);
@@ -168,6 +169,4 @@ main(int argc, char *argv[])
 
     /* height of tree */
     printf("height of tree = %d\n", height(root));
-    
-    return (0);
 }
