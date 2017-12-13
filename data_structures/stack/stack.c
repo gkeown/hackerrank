@@ -1,10 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef struct StackNode {
-    int data;
-    struct StackNode *next;
-} StackNode;
+#include "../common/stack.h"
 
 int
 isEmpty(StackNode *root)
@@ -86,26 +82,26 @@ reverse(char *string)
     printf("result = %s\n", string);
 }
 
-int
-main(int argc, char *argv[])
-{
-    StackNode *stack = NULL;
+// int
+// main(int argc, char *argv[])
+// {
+//    StackNode *stack = NULL;
 
-    push(&stack, 10);
-    push(&stack, 20);
-    push(&stack, 30);
+//    push(&stack, 10);
+//    push(&stack, 20);
+//    push(&stack, 30);
 
-    printf("top element: %d\n", peek(stack));
+//    printf("top element: %d\n", peek(stack));
 
-    printf("%d\n", pop(&stack));
-    printf("%d\n", pop(&stack));
-    printf("%d\n", pop(&stack));
-    pop(&stack);
+//    printf("%d\n", pop(&stack));
+//    printf("%d\n", pop(&stack));
+//    printf("%d\n", pop(&stack));
+//    pop(&stack);
 
-    char str[] = "test string";
-    printf("Reversing %s\n", str);
-    reverse(str);
+//    char str[] = "test string";
+//    printf("Reversing %s\n", str);
+//    reverse(str);
 
 
-    return (0);
-}
+//    return (0);
+// }

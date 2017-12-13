@@ -1,15 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "../common/tree.h"
 
-typedef struct TNode {
-    int data;
-    struct TNode *left;
-    struct TNode *right;
-} TNode;
-
-int height(TNode *node);
-TNode * new_node(int data);
-void print_levels(TNode *node);
+#define MAX_Q_SIZE 500
 
 TNode *
 new_node(int data)
@@ -57,6 +50,23 @@ print_postorder(TNode *node)
     printf("%d ", node->data);
 }
 
+int
+height(TNode *node)
+{
+    if (node == NULL) {
+        return (0);
+    }
+
+    int lheight = height(node->left);
+    int rheight = height(node->right);
+
+    if (lheight > rheight) {
+        return (lheight+1);
+    } else {
+        return (rheight+1);
+    }
+}
+
 void
 print_given_level(TNode *node, int level)
 {
@@ -82,23 +92,50 @@ print_levels(TNode *node)
     }
 }
 
-int
-height(TNode *node)
+/* UTILITY FUNCTIONS */
+TNode **
+createQueue(int *front, int *rear)
 {
-    if (node == NULL) {
-        return (0);
-    }
-
-    int lheight = height(node->left);
-    int rheight = height(node->right);
-
-    if (lheight > rheight) {
-        return (lheight+1);
-    } else {
-        return (rheight+1);
-    }
+    TNode **queue = (TNode **) malloc(sizeof(TNode *) * MAX_Q_SIZE);
+    *front = *rear = 0;
+    return (queue);
 }
 
+void
+enQueue(TNode **queue, int *rear, TNode *new_node)
+{
+    queue[*rear] = new_node;
+    (*rear)++;
+}
+
+TNode *
+deQueue(TNode **queue, int *front)
+{
+    (*front)++;
+    return queue[*front - 1];
+}
+
+void
+print_levels_queue(TNode *node)
+{
+    /* create a queue to store tree nodes */
+    int front, rear;
+    TNode **queue = createQueue(&front, &rear);
+
+    while (node) {
+        
+        /* print current node's value first */
+        printf("%d \n", node->data);
+
+        /* enqueue its children */
+        enQueue(queue, &rear, node->left);
+        enQueue(queue, &rear, node->right);
+
+        /* dequeue the next node to be processed */
+        node = deQueue(queue, &front);
+    }
+    return;
+}
 int
 main(int argc, char *argv[])
 {
@@ -109,16 +146,24 @@ main(int argc, char *argv[])
     root->left->right = new_node(5); 
 
     /* depth first */
+    printf("print pre-order depth first: ");
     print_preorder(root);
     printf("\n");
+    printf("print in-order depth first: ");
     print_inorder(root);
     printf("\n");
+    printf("print post-order depth first: ");
     print_postorder(root);
     printf("\n");
 
     /* breadth first */
     printf("print breadth first: ");
     print_levels(root);
+    printf("\n");
+
+    /* print breadth first using queue rather than recursion */
+    printf("print breadth first using queue: ");
+    print_levels_queue(root);
     printf("\n");
 
     /* height of tree */

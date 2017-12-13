@@ -1,17 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-/* linked list implementation */
-typedef struct QNode {
-    int data;
-    struct QNode *next;
-} QNode;
-
-/* queue structure */
-typedef struct Queue {
-    QNode *front;
-    QNode *back;
-} Queue;
+#include "../common/queue.h"
+#include "../common/linkedlist.h"
 
 QNode *
 init_node(int data)
@@ -69,18 +59,18 @@ dequeue(Queue *queue)
     return (node);
 }
 
-int
-main(int argc, char *argv[])
-{
-    Queue *queue = init_queue();    
-    QNode *node = NULL;
-    enqueue(queue, 10);
-    enqueue(queue, 20);
-    enqueue(queue, 30);
+// int
+// main(int argc, char *argv[])
+// {
+//    Queue *queue = init_queue();    
+//    QNode *node = NULL;
+//    enqueue(queue, 10);
+//    enqueue(queue, 20);
+//    enqueue(queue, 30);
 
-    while (node = dequeue(queue)) {
-        printf("%d\n", node->data);
-    }
+//    while (node = dequeue(queue)) {
+//        printf("%d\n", node->data);
+//    }
 
-    return (0);
-}
+//    return (0);
+// }

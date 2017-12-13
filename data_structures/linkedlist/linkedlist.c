@@ -1,10 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef struct Node {
-    int data;
-    struct Node *next;
-} Node;
+#include "../common/linkedlist.h"
 
 void
 push(Node **head, int data) {
@@ -150,13 +146,13 @@ insert_elem(Node **headRef, int data, int pos)
     Node *prev = NULL, *new_node = NULL;
     int i = 0;
 
-    new_node = malloc(sizeof(*new_node));
+    new_node = (Node *) malloc(sizeof(*new_node));
     new_node->data = data;
     new_node->next = NULL;
 
     /* this is the first element in the list to be added */
     if (current == NULL) {
-        *headRef = new_node;
+      headRef = new_node;
         return;
     }
 
@@ -213,33 +209,33 @@ remove_elem(Node **headRef, int pos)
     free(current);
 }
 
-int main() {
-	Node *list1 = NULL;
-	Node *list2 = NULL;
+// int main() {
+//	Node *list1 = NULL;
+//	Node *list2 = NULL;
 	
-	push(&list1, 10);
-	push(&list1, 20);
-	push(&list1, 30);
-	push(&list1, 50);
-	push(&list1, 25);
+//	push(&list1, 10);
+//	push(&list1, 20);
+//	push(&list1, 30);
+//	push(&list1, 50);
+//	push(&list1, 25);
 
-	printlist(list1);
+//	printlist(list1);
 
-	insert_elem(&list2, 15, 0);
-	insert_elem(&list2, 25, 1);
-	insert_elem(&list2, 35, 2);
-	insert_elem(&list2, 35, 99);
-	insert_elem(&list2, 55, 1);
-	insert_elem(&list2, 95, 0);
+//	insert_elem(&list2, 15, 0);
+//	insert_elem(&list2, 25, 1);
+//	insert_elem(&list2, 35, 2);
+//	insert_elem(&list2, 35, 99);
+//	insert_elem(&list2, 55, 1);
+//	insert_elem(&list2, 95, 0);
 
-	printlist(list2);
+//	printlist(list2);
 
-    remove_elem(&list2, 0);
-    remove_elem(&list2, 1);
-    remove_elem(&list2, 3);
-    remove_elem(&list2, 6);
+//  remove_elem(&list2, 0);
+//  remove_elem(&list2, 1);
+//  remove_elem(&list2, 3);
+//  remove_elem(&list2, 6);
 
-	printlist(list2);
+//	printlist(list2);
 	
-	return 0;
-}
+//	return 0;
+// }
