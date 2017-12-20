@@ -88,6 +88,7 @@ print_levels(TNode *node)
     int levels = height(node);
     while (i <= levels) {
         print_given_level(node, i);
+        printf("\n");
         i++;
     }
 }
