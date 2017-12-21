@@ -55,6 +55,21 @@ find_smallest_value(TNode *root)
     return (root);
 }
 
+TNode *
+find_largest_value(TNode *root) {
+
+    if (root == NULL) {
+        return (NULL);
+    }
+
+    /* traverse the right side of the tree until no more left leaves */
+    if (root->right != NULL) {
+        root = find_largest_value(root->right);
+    }
+
+    return (root);
+}
+
 /* returns the new root */
 TNode *
 delete(TNode *root, int value)
@@ -107,7 +122,44 @@ delete(TNode *root, int value)
 }
 
 void
-test_bst(void)
+find_before_after_value(TNode *root, int value, TNode **pre, TNode **suc)
+{
+
+    /* past leaf */
+    if (root == NULL) {
+        return;
+    }
+
+    if (root->data == value) {
+        /* find the predecessor - largest node in the left branch */
+        if (root->left) {
+            *pre = find_largest_value(root->left);
+        }
+
+        /* find the successor - smallest node in the right branch */
+        if (root->right) {
+            *suc = find_smallest_value(root->right);
+        }
+        return;
+    }
+
+    if (value < root->data) {
+        /* root is the successor */
+        *suc = root;
+
+        /* find the predecessor */
+        find_before_after_value(root->left, value, pre, suc);
+    } else if (value > root->data) {
+        /* root is the predecessor */
+        *pre = root;
+
+        /* find the successor */
+        find_before_after_value(root->right, value, pre, suc);
+    }
+}
+
+void
+test_bst1(void)
 {
     // create a BST
     TNode *root = NULL;
@@ -135,4 +187,37 @@ test_bst(void)
     root = delete(root, 50);
     printf("Tree after deletion:\n");
     print_levels(root);
+}
+
+/* http://www.geeksforgeeks.org/inorder-predecessor-successor-given-key-bst/ */
+void
+test_bst2(void)
+{
+   /* Let us create following BST
+              50
+           /     \
+          30      70
+         /  \    /  \
+       20   40  60   80 */
+    TNode *root = NULL;
+    root = insert(root, 50);
+    insert(root, 30);
+    insert(root, 20);
+    insert(root, 40);
+    insert(root, 70);
+    insert(root, 60);
+    insert(root, 80);
+
+    printf("Tree:\n");
+    print_levels(root);
+
+	TNode *pre = NULL, *suc = NULL;
+
+    find_before_after_value(root, 50, &pre, &suc);
+	printf("50 - pre: %d suc: %d\n", (pre) ? pre->data : -1, (suc) ? suc->data : -1);
+
+    TNode *pre1 = NULL, *suc1 = NULL;
+
+    find_before_after_value(root, 35, &pre1, &suc1);
+	printf("35 - pre: %d suc: %d\n", (pre1) ? pre1->data : -1, (suc1) ? suc1->data : -1);
 }
