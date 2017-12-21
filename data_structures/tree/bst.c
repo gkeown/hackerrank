@@ -257,16 +257,12 @@ get_successor(TNode *root, TNode *node)
 TNode *
 lowest_common_ancestor(TNode *root, int value1, int value2)
 {
-    TNode *lca = root;
-
     while (root != NULL) {
         if (value1 < root->data && value2 < root->data) {
             /* value is in left branch */
-            lca = root;
             root = root->left;
-        } else if (value1 >= root->data && value2 >= root->data) {
+        } else if (value1 > root->data && value2 > root->data) {
             /* value is in right branch */
-            lca = root;
             root = root->right;
         } else {
             /* values have taken different branches */
@@ -274,7 +270,26 @@ lowest_common_ancestor(TNode *root, int value1, int value2)
         }
     }
 
-    return (lca);
+    return (root);
+}
+
+TNode *
+lowest_common_ancestor_recursive(TNode *root, int value1, int value2)
+{
+    /* empty tree */
+    if (root == NULL) {
+        return (NULL);
+    }
+
+    if (value1 < root->data && value2 < root->data) {
+        return (lowest_common_ancestor_recursive(root->left, value1, value2));
+    }
+
+    if (value1 > root->data && value2 > root->data) {
+        return (lowest_common_ancestor_recursive(root->right, value1, value2));
+    }
+
+    return (root);
 }
 
 void
@@ -412,6 +427,7 @@ test_bst4(void)
     }
 }
 
+/* https://www.geeksforgeeks.org/lowest-common-ancestor-in-a-binary-search-tree/ */
 void
 test_bst5(void)
 {
@@ -434,5 +450,20 @@ test_bst5(void)
 
     n1 = 10, n2 = 22;
     res = lowest_common_ancestor(root, n1, n2);
+    printf("LCA of %d and %d is %d \n", n1, n2, res->data);
+
+    printf("=======================\n");
+
+    /* recursive */
+    n1 = 10, n2 = 14;
+    res = lowest_common_ancestor_recursive(root, n1, n2);
+    printf("LCA of %d and %d is %d \n", n1, n2, res->data);
+
+    n1 = 14, n2 = 8;
+    res = lowest_common_ancestor_recursive(root, n1, n2);
+    printf("LCA of %d and %d is %d \n", n1, n2, res->data);
+
+    n1 = 10, n2 = 22;
+    res = lowest_common_ancestor_recursive(root, n1, n2);
     printf("LCA of %d and %d is %d \n", n1, n2, res->data);
 }
